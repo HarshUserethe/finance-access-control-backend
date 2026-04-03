@@ -63,14 +63,12 @@ describe('Auth Endpoints', () => {
   });
 
   test('POST /api/auth/register — new user', async () => {
-    const res = await request(app)
-      .post('/api/auth/register')
-      .send({
-        name: 'Test User',
-        email: 'test@finance.com',
-        password: 'Test@123',
-        role: 'viewer',
-      });
+    const res = await request(app).post('/api/auth/register').send({
+      name: 'Test User',
+      email: 'test@finance.com',
+      password: 'Test@123',
+      role: 'viewer',
+    });
 
     expect(res.statusCode).toBe(201);
     expect(res.body.data.user.email).toBe('test@finance.com');
@@ -78,29 +76,23 @@ describe('Auth Endpoints', () => {
   });
 
   test('POST /api/auth/register — duplicate email', async () => {
-    const res = await request(app)
-      .post('/api/auth/register')
-      .send({
-        name: 'Dup User',
-        email: 'admin@finance.com',
-        password: 'Test@123',
-      });
+    const res = await request(app).post('/api/auth/register').send({
+      name: 'Dup User',
+      email: 'admin@finance.com',
+      password: 'Test@123',
+    });
 
     expect(res.statusCode).toBe(409);
   });
 
   test('POST /api/auth/register — validation error', async () => {
-    const res = await request(app)
-      .post('/api/auth/register')
-      .send({ email: 'bad' });
+    const res = await request(app).post('/api/auth/register').send({ email: 'bad' });
 
     expect(res.statusCode).toBe(400);
   });
 
   test('GET /api/auth/me — authenticated', async () => {
-    const res = await request(app)
-      .get('/api/auth/me')
-      .set('Authorization', `Bearer ${adminToken}`);
+    const res = await request(app).get('/api/auth/me').set('Authorization', `Bearer ${adminToken}`);
 
     expect(res.statusCode).toBe(200);
     expect(res.body.data.user.email).toBe('admin@finance.com');
@@ -118,9 +110,7 @@ describe('Auth Endpoints', () => {
 
 describe('User Endpoints (Admin)', () => {
   test('GET /api/users — list users', async () => {
-    const res = await request(app)
-      .get('/api/users')
-      .set('Authorization', `Bearer ${adminToken}`);
+    const res = await request(app).get('/api/users').set('Authorization', `Bearer ${adminToken}`);
 
     expect(res.statusCode).toBe(200);
     expect(Array.isArray(res.body.data)).toBe(true);
@@ -173,9 +163,7 @@ describe('User Endpoints (Admin)', () => {
   });
 
   test('GET /api/users — viewer denied', async () => {
-    const res = await request(app)
-      .get('/api/users')
-      .set('Authorization', `Bearer ${viewerToken}`);
+    const res = await request(app).get('/api/users').set('Authorization', `Bearer ${viewerToken}`);
 
     expect(res.statusCode).toBe(403);
   });

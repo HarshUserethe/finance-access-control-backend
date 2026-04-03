@@ -6,9 +6,16 @@
   "scripts": {
     "start": "node src/app.js",
     "dev": "nodemon src/app.js",
-    "test": "jest --verbose --forceExit"
+    "test": "jest --verbose --forceExit",
+    "format": "prettier --write ."
   },
-  "keywords": ["finance", "backend", "express", "rbac", "api"],
+  "keywords": [
+    "finance",
+    "backend",
+    "express",
+    "rbac",
+    "api"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -26,6 +33,7 @@
   "devDependencies": {
     "jest": "^29.7.0",
     "nodemon": "^3.1.4",
+    "prettier": "^3.8.1",
     "supertest": "^7.0.0"
   }
 }

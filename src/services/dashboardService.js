@@ -1,15 +1,5 @@
-/**
- * Dashboard Service
- * ------------------
- * Aggregation and analytics logic for the finance dashboard.
- * All computations run against the in-memory records store.
- */
-
 const { records } = require('../data/store');
 
-/**
- * Overall summary: total income, total expenses, net balance, record count.
- */
 exports.getSummary = () => {
   const active = records.filter((r) => r.deletedAt === null);
 
@@ -47,7 +37,6 @@ exports.getCategorySummary = () => {
     map[r.category].count++;
   }
 
-  // Convert to sorted array
   return Object.values(map)
     .map((c) => ({
       ...c,
@@ -58,9 +47,6 @@ exports.getCategorySummary = () => {
     .sort((a, b) => b.count - a.count);
 };
 
-/**
- * Monthly trends — income, expenses, and net per month.
- */
 exports.getMonthlyTrends = () => {
   const active = records.filter((r) => r.deletedAt === null);
   const map = {};
@@ -93,9 +79,6 @@ exports.getMonthlyTrends = () => {
     .sort((a, b) => a.month.localeCompare(b.month));
 };
 
-/**
- * Weekly trends — income, expenses, and net per ISO week.
- */
 exports.getWeeklyTrends = () => {
   const active = records.filter((r) => r.deletedAt === null);
   const map = {};
@@ -123,17 +106,12 @@ exports.getWeeklyTrends = () => {
     .sort((a, b) => a.week.localeCompare(b.week));
 };
 
-/**
- * Recent activity — the latest N records (default 10).
- */
 exports.getRecentActivity = (limit = 10) => {
   return records
     .filter((r) => r.deletedAt === null)
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
     .slice(0, limit);
 };
-
-// ──────────────── Helpers ────────────────
 
 function round(n) {
   return Math.round(n * 100) / 100;

@@ -1,9 +1,3 @@
-/**
- * Auth Service
- * -------------
- * Handles user registration, login, logout, and token generation.
- */
-
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
@@ -11,12 +5,7 @@ const config = require('../config');
 const { users, blacklistedTokens } = require('../data/store');
 const AppError = require('../utils/AppError');
 
-/**
- * Register a new user.
- * @returns {Object} user (sans password) + JWT token
- */
 exports.register = async ({ name, email, password, role }) => {
-  // Check for duplicate email
   const existing = users.find(
     (u) => u.email.toLowerCase() === email.toLowerCase() && u.deletedAt === null
   );
@@ -46,10 +35,6 @@ exports.register = async ({ name, email, password, role }) => {
   return { user: safeUser, token };
 };
 
-/**
- * Authenticate with email + password.
- * @returns {Object} user (sans password) + JWT token
- */
 exports.login = async ({ email, password }) => {
   const user = users.find(
     (u) => u.email.toLowerCase() === email.toLowerCase() && u.deletedAt === null
@@ -74,19 +59,12 @@ exports.login = async ({ email, password }) => {
   return { user: safeUser, token };
 };
 
-/**
- * Logout — blacklists the supplied token.
- */
 exports.logout = (token) => {
   blacklistedTokens.add(token);
 };
 
-// ──────────────── Helpers ────────────────
-
 function generateToken(user) {
-  return jwt.sign(
-    { id: user.id, email: user.email, role: user.role },
-    config.jwtSecret,
-    { expiresIn: config.jwtExpiresIn }
-  );
+  return jwt.sign({ id: user.id, email: user.email, role: user.role }, config.jwtSecret, {
+    expiresIn: config.jwtExpiresIn,
+  });
 }

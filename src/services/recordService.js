@@ -1,16 +1,7 @@
-/**
- * Record Service
- * ---------------
- * Business logic for financial record CRUD, filtering, and pagination.
- */
-
 const { v4: uuidv4 } = require('uuid');
 const { records } = require('../data/store');
 const AppError = require('../utils/AppError');
 
-/**
- * Create a new financial record.
- */
 exports.createRecord = (data, userId) => {
   const newRecord = {
     id: `rec_${uuidv4().slice(0, 8)}`,
@@ -29,9 +20,6 @@ exports.createRecord = (data, userId) => {
   return newRecord;
 };
 
-/**
- * List records with filters, search, sort, and pagination.
- */
 exports.listRecords = ({
   page = 1,
   limit = 10,
@@ -45,7 +33,6 @@ exports.listRecords = ({
 }) => {
   let filtered = records.filter((r) => r.deletedAt === null);
 
-  // ── Filters ──
   if (type) filtered = filtered.filter((r) => r.type === type);
   if (category) filtered = filtered.filter((r) => r.category === category);
 
@@ -62,13 +49,10 @@ exports.listRecords = ({
   if (search) {
     const q = search.toLowerCase();
     filtered = filtered.filter(
-      (r) =>
-        r.description.toLowerCase().includes(q) ||
-        r.category.toLowerCase().includes(q)
+      (r) => r.description.toLowerCase().includes(q) || r.category.toLowerCase().includes(q)
     );
   }
 
-  // ── Sort ──
   filtered.sort((a, b) => {
     let valA, valB;
     if (sortBy === 'amount') {
@@ -91,18 +75,12 @@ exports.listRecords = ({
   return { records: paginated, total };
 };
 
-/**
- * Get a single record by ID.
- */
 exports.getRecordById = (id) => {
   const record = records.find((r) => r.id === id && r.deletedAt === null);
   if (!record) throw new AppError('Record not found.', 404);
   return record;
 };
 
-/**
- * Update an existing record.
- */
 exports.updateRecord = (id, updates) => {
   const record = records.find((r) => r.id === id && r.deletedAt === null);
   if (!record) throw new AppError('Record not found.', 404);
@@ -117,9 +95,6 @@ exports.updateRecord = (id, updates) => {
   return record;
 };
 
-/**
- * Soft-delete a record.
- */
 exports.deleteRecord = (id) => {
   const record = records.find((r) => r.id === id && r.deletedAt === null);
   if (!record) throw new AppError('Record not found.', 404);

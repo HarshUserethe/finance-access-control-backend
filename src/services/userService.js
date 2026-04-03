@@ -1,15 +1,6 @@
-/**
- * User Service
- * -------------
- * Business logic for user CRUD and admin-level user management.
- */
-
 const { users } = require('../data/store');
 const AppError = require('../utils/AppError');
 
-/**
- * List users with optional filters, search, and pagination.
- */
 exports.listUsers = ({ page = 1, limit = 10, role, status, search }) => {
   let filtered = users.filter((u) => u.deletedAt === null);
 
@@ -19,9 +10,7 @@ exports.listUsers = ({ page = 1, limit = 10, role, status, search }) => {
   if (search) {
     const q = search.toLowerCase();
     filtered = filtered.filter(
-      (u) =>
-        u.name.toLowerCase().includes(q) ||
-        u.email.toLowerCase().includes(q)
+      (u) => u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q)
     );
   }
 
@@ -29,15 +18,11 @@ exports.listUsers = ({ page = 1, limit = 10, role, status, search }) => {
   const start = (page - 1) * limit;
   const paginated = filtered.slice(start, start + limit);
 
-  // Strip passwords
   const safe = paginated.map(({ password, ...rest }) => rest);
 
   return { users: safe, total };
 };
 
-/**
- * Get a single user by ID.
- */
 exports.getUserById = (id) => {
   const user = users.find((u) => u.id === id && u.deletedAt === null);
   if (!user) throw new AppError('User not found.', 404);
@@ -46,9 +31,6 @@ exports.getUserById = (id) => {
   return safeUser;
 };
 
-/**
- * Update a user's name, role, or status.
- */
 exports.updateUser = (id, updates) => {
   const user = users.find((u) => u.id === id && u.deletedAt === null);
   if (!user) throw new AppError('User not found.', 404);
@@ -62,9 +44,6 @@ exports.updateUser = (id, updates) => {
   return safeUser;
 };
 
-/**
- * Soft-delete a user.
- */
 exports.deleteUser = (id, requesterId) => {
   if (id === requesterId) {
     throw new AppError('You cannot delete your own account.', 400);

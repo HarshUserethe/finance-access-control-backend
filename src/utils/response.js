@@ -1,7 +1,3 @@
-/**
- * Standardised JSON response helpers.
- */
-
 exports.success = (res, data, statusCode = 200, meta = {}) => {
   const response = {
     status: 'success',

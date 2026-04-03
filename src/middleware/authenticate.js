@@ -1,11 +1,3 @@
-/**
- * Authentication Middleware
- * -------------------------
- * Verifies the JWT token from the Authorization header, attaches the
- * authenticated user object to `req.user`, and rejects requests with
- * invalid / missing / blacklisted tokens.
- */
-
 const jwt = require('jsonwebtoken');
 const config = require('../config');
 const { users, blacklistedTokens } = require('../data/store');
@@ -13,7 +5,6 @@ const AppError = require('../utils/AppError');
 
 const authenticate = (req, res, next) => {
   try {
-    // 1. Extract token
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       throw new AppError('Authentication required. Please provide a valid token.', 401);
@@ -21,18 +12,13 @@ const authenticate = (req, res, next) => {
 
     const token = authHeader.split(' ')[1];
 
-    // 2. Check blacklist (logged-out tokens)
     if (blacklistedTokens.has(token)) {
       throw new AppError('Token has been invalidated. Please log in again.', 401);
     }
 
-    // 3. Verify token
     const decoded = jwt.verify(token, config.jwtSecret);
 
-    // 4. Find user and confirm they still exist & are active
-    const user = users.find(
-      (u) => u.id === decoded.id && u.deletedAt === null
-    );
+    const user = users.find((u) => u.id === decoded.id && u.deletedAt === null);
 
     if (!user) {
       throw new AppError('The user associated with this token no longer exists.', 401);
@@ -42,7 +28,6 @@ const authenticate = (req, res, next) => {
       throw new AppError('Your account has been deactivated. Contact an administrator.', 403);
     }
 
-    // 5. Attach user (excluding password) and raw token to request
     const { password, ...safeUser } = user;
     req.user = safeUser;
     req.token = token;

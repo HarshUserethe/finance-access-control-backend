@@ -1,18 +1,5 @@
-/**
- * In-Memory Data Store
- * ---------------------
- * This module acts as the single source of truth for all application data.
- * It replaces a real database with plain JavaScript objects / arrays.
- *
- * Seed data is pre-loaded so the API is usable immediately after starting.
- *
- * ASSUMPTION: Data is ephemeral — it resets every time the server restarts.
- */
-
 const { v4: uuidv4 } = require('uuid');
 const bcrypt = require('bcryptjs');
-
-// ──────────────────────────── Users ────────────────────────────
 
 const users = [
   {
@@ -61,10 +48,7 @@ const users = [
   },
 ];
 
-// ──────────────────────────── Financial Records ────────────────
-
 const records = [
-  // ── January 2025 ──
   {
     id: 'rec_001',
     userId: 'usr_001',
@@ -114,7 +98,6 @@ const records = [
     deletedAt: null,
   },
 
-  // ── February 2025 ──
   {
     id: 'rec_005',
     userId: 'usr_001',
@@ -164,7 +147,6 @@ const records = [
     deletedAt: null,
   },
 
-  // ── March 2025 ──
   {
     id: 'rec_009',
     userId: 'usr_001',
@@ -251,9 +233,6 @@ const records = [
   },
 ];
 
-// ──────────────────────────── Blacklisted Tokens ───────────────
 const blacklistedTokens = new Set();
-
-// ──────────────────────────── Exports ──────────────────────────
 
 module.exports = { users, records, blacklistedTokens };

@@ -25,17 +25,17 @@ A RESTful API backend for a finance dashboard system built with **Node.js** and 
 
 ## Features
 
-| Area | Details |
-|------|---------|
-| **Authentication** | JWT-based register/login/logout with token blacklisting |
-| **RBAC** | Three roles — Viewer, Analyst, Admin — enforced via middleware |
-| **Financial Records** | Full CRUD with filtering (type, category, date range), search, sort, pagination, soft-delete |
-| **Dashboard Analytics** | Total income/expenses/net, category breakdown, monthly & weekly trends, recent activity |
-| **Validation** | Joi schemas on all request bodies and query parameters |
-| **Error Handling** | Centralized error handler with consistent JSON responses and appropriate HTTP status codes |
-| **Rate Limiting** | Auth endpoints rate-limited (15 req / 15 min per IP) |
-| **Security** | Helmet headers, CORS, JSON body size limit, bcrypt password hashing |
-| **Testing** | Jest + Supertest integration test suite (35+ tests) |
+| Area                    | Details                                                                                      |
+| ----------------------- | -------------------------------------------------------------------------------------------- |
+| **Authentication**      | JWT-based register/login/logout with token blacklisting                                      |
+| **RBAC**                | Three roles — Viewer, Analyst, Admin — enforced via middleware                               |
+| **Financial Records**   | Full CRUD with filtering (type, category, date range), search, sort, pagination, soft-delete |
+| **Dashboard Analytics** | Total income/expenses/net, category breakdown, monthly & weekly trends, recent activity      |
+| **Validation**          | Joi schemas on all request bodies and query parameters                                       |
+| **Error Handling**      | Centralized error handler with consistent JSON responses and appropriate HTTP status codes   |
+| **Rate Limiting**       | Auth endpoints rate-limited (15 req / 15 min per IP)                                         |
+| **Security**            | Helmet headers, CORS, JSON body size limit, bcrypt password hashing                          |
+| **Testing**             | Jest + Supertest integration test suite (35+ tests)                                          |
 
 ---
 
@@ -153,11 +153,11 @@ The app ships with pre-loaded mock data so you can test immediately.
 
 ### Users
 
-| Email | Password | Role |
-|-------|----------|------|
-| `admin@finance.com` | `Admin@123` | Admin |
-| `analyst@finance.com` | `Analyst@123` | Analyst |
-| `viewer@finance.com` | `Viewer@123` | Viewer |
+| Email                  | Password       | Role              |
+| ---------------------- | -------------- | ----------------- |
+| `admin@finance.com`    | `Admin@123`    | Admin             |
+| `analyst@finance.com`  | `Analyst@123`  | Analyst           |
+| `viewer@finance.com`   | `Viewer@123`   | Viewer            |
 | `inactive@finance.com` | `Inactive@123` | Viewer (inactive) |
 
 ### Records
@@ -171,26 +171,27 @@ The app ships with pre-loaded mock data so you can test immediately.
 **Base URL:** `http://localhost:3000/api`
 
 All protected endpoints require the header:
+
 ```
 Authorization: Bearer <token>
 ```
 
 ### Health Check
 
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| GET | `/api/health` | No | Server health check |
+| Method | Endpoint      | Auth | Description         |
+| ------ | ------------- | ---- | ------------------- |
+| GET    | `/api/health` | No   | Server health check |
 
 ---
 
 ### Auth Endpoints
 
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| POST | `/api/auth/register` | No | Register a new user |
-| POST | `/api/auth/login` | No | Login and receive JWT |
-| POST | `/api/auth/logout` | Yes | Invalidate current token |
-| GET | `/api/auth/me` | Yes | Get current user profile |
+| Method | Endpoint             | Auth | Description              |
+| ------ | -------------------- | ---- | ------------------------ |
+| POST   | `/api/auth/register` | No   | Register a new user      |
+| POST   | `/api/auth/login`    | No   | Login and receive JWT    |
+| POST   | `/api/auth/logout`   | Yes  | Invalidate current token |
+| GET    | `/api/auth/me`       | Yes  | Get current user profile |
 
 #### Register
 
@@ -217,6 +218,7 @@ curl -X POST http://localhost:3000/api/auth/login \
 ```
 
 **Response:**
+
 ```json
 {
   "status": "success",
@@ -237,14 +239,15 @@ curl -X POST http://localhost:3000/api/auth/login \
 
 ### User Endpoints (Admin Only)
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/users` | List users (paginated, filterable) |
-| GET | `/api/users/:id` | Get user by ID |
-| PATCH | `/api/users/:id` | Update user (name, role, status) |
-| DELETE | `/api/users/:id` | Soft-delete user |
+| Method | Endpoint         | Description                        |
+| ------ | ---------------- | ---------------------------------- |
+| GET    | `/api/users`     | List users (paginated, filterable) |
+| GET    | `/api/users/:id` | Get user by ID                     |
+| PATCH  | `/api/users/:id` | Update user (name, role, status)   |
+| DELETE | `/api/users/:id` | Soft-delete user                   |
 
 **Query Parameters for list:**
+
 - `page` (default: 1)
 - `limit` (default: 10, max: 100)
 - `role` — filter by role (`viewer`, `analyst`, `admin`)
@@ -260,15 +263,16 @@ curl http://localhost:3000/api/users?role=viewer&status=active \
 
 ### Financial Record Endpoints
 
-| Method | Endpoint | Roles | Description |
-|--------|----------|-------|-------------|
-| POST | `/api/records` | Admin | Create record |
-| GET | `/api/records` | All | List records (filtered, paginated) |
-| GET | `/api/records/:id` | All | Get single record |
-| PUT | `/api/records/:id` | Admin | Update record |
-| DELETE | `/api/records/:id` | Admin | Soft-delete record |
+| Method | Endpoint           | Roles | Description                        |
+| ------ | ------------------ | ----- | ---------------------------------- |
+| POST   | `/api/records`     | Admin | Create record                      |
+| GET    | `/api/records`     | All   | List records (filtered, paginated) |
+| GET    | `/api/records/:id` | All   | Get single record                  |
+| PUT    | `/api/records/:id` | Admin | Update record                      |
+| DELETE | `/api/records/:id` | Admin | Soft-delete record                 |
 
 **Query Parameters for list:**
+
 - `page`, `limit` — pagination
 - `type` — `income` or `expense`
 - `category` — e.g. `salary`, `rent`, `food`
@@ -303,15 +307,16 @@ curl "http://localhost:3000/api/records?startDate=2025-02-01&endDate=2025-02-28"
 
 ### Dashboard Endpoints
 
-| Method | Endpoint | Roles | Description |
-|--------|----------|-------|-------------|
-| GET | `/api/dashboard/summary` | All | Total income, expenses, net balance |
-| GET | `/api/dashboard/category-summary` | All | Category-wise breakdown |
-| GET | `/api/dashboard/trends` | Analyst, Admin | Monthly income/expense trends |
-| GET | `/api/dashboard/trends/weekly` | Analyst, Admin | Weekly income/expense trends |
-| GET | `/api/dashboard/recent-activity` | All | Latest records (default 10) |
+| Method | Endpoint                          | Roles          | Description                         |
+| ------ | --------------------------------- | -------------- | ----------------------------------- |
+| GET    | `/api/dashboard/summary`          | All            | Total income, expenses, net balance |
+| GET    | `/api/dashboard/category-summary` | All            | Category-wise breakdown             |
+| GET    | `/api/dashboard/trends`           | Analyst, Admin | Monthly income/expense trends       |
+| GET    | `/api/dashboard/trends/weekly`    | Analyst, Admin | Weekly income/expense trends        |
+| GET    | `/api/dashboard/recent-activity`  | All            | Latest records (default 10)         |
 
 **Example — Summary Response:**
+
 ```json
 {
   "status": "success",
@@ -327,6 +332,7 @@ curl "http://localhost:3000/api/records?startDate=2025-02-01&endDate=2025-02-28"
 ```
 
 **Example — Monthly Trends Response:**
+
 ```json
 {
   "status": "success",
@@ -342,20 +348,20 @@ curl "http://localhost:3000/api/records?startDate=2025-02-01&endDate=2025-02-28"
 
 ## Access Control Matrix
 
-| Action | Viewer | Analyst | Admin |
-|--------|--------|---------|-------|
-| Register / Login | ✅ | ✅ | ✅ |
-| View own profile | ✅ | ✅ | ✅ |
-| View records | ✅ | ✅ | ✅ |
-| Filter / search records | ✅ | ✅ | ✅ |
-| View dashboard summary | ✅ | ✅ | ✅ |
-| View category summary | ✅ | ✅ | ✅ |
-| View recent activity | ✅ | ✅ | ✅ |
-| Access monthly/weekly trends | ❌ | ✅ | ✅ |
-| Create records | ❌ | ❌ | ✅ |
-| Update records | ❌ | ❌ | ✅ |
-| Delete records | ❌ | ❌ | ✅ |
-| Manage users | ❌ | ❌ | ✅ |
+| Action                       | Viewer | Analyst | Admin |
+| ---------------------------- | ------ | ------- | ----- |
+| Register / Login             | ✅     | ✅      | ✅    |
+| View own profile             | ✅     | ✅      | ✅    |
+| View records                 | ✅     | ✅      | ✅    |
+| Filter / search records      | ✅     | ✅      | ✅    |
+| View dashboard summary       | ✅     | ✅      | ✅    |
+| View category summary        | ✅     | ✅      | ✅    |
+| View recent activity         | ✅     | ✅      | ✅    |
+| Access monthly/weekly trends | ❌     | ✅      | ✅    |
+| Create records               | ❌     | ❌      | ✅    |
+| Update records               | ❌     | ❌      | ✅    |
+| Delete records               | ❌     | ❌      | ✅    |
+| Manage users                 | ❌     | ❌      | ✅    |
 
 ---
 
@@ -370,15 +376,15 @@ All errors follow a consistent JSON format:
 }
 ```
 
-| Status Code | Meaning |
-|-------------|---------|
-| 400 | Validation error / bad request |
-| 401 | Authentication required or invalid token |
-| 403 | Insufficient permissions / inactive account |
-| 404 | Resource not found |
-| 409 | Conflict (e.g. duplicate email) |
-| 429 | Too many requests (rate limit) |
-| 500 | Internal server error |
+| Status Code | Meaning                                     |
+| ----------- | ------------------------------------------- |
+| 400         | Validation error / bad request              |
+| 401         | Authentication required or invalid token    |
+| 403         | Insufficient permissions / inactive account |
+| 404         | Resource not found                          |
+| 409         | Conflict (e.g. duplicate email)             |
+| 429         | Too many requests (rate limit)              |
+| 500         | Internal server error                       |
 
 ---
 
@@ -402,17 +408,17 @@ The test suite includes **35+ integration tests** covering:
 
 ## Assumptions & Tradeoffs
 
-| Decision | Rationale |
-|----------|-----------|
-| **In-memory data store** | No database setup required; data resets on restart. Clearly documented as per assignment. |
-| **Soft deletes** | Records and users are flagged with `deletedAt` instead of being removed, preserving audit trail. |
-| **JWT for auth** | Stateless, simple to implement, includes role in payload for fast RBAC checks. |
-| **Token blacklist in-memory** | Resets on restart; suitable for assessment scope. Production would use Redis. |
-| **Joi for validation** | Declarative, composable schemas with excellent error messages. |
-| **Layered architecture** | Routes → Services → Data Store keeps concerns separated and code testable. |
-| **Role in JWT payload** | Avoids an extra DB lookup on every request; role changes require re-login. |
-| **All users can register** | In production, admin-only user creation would be more appropriate. |
-| **No file upload** | Financial records are text-based entries only. |
+| Decision                      | Rationale                                                                                        |
+| ----------------------------- | ------------------------------------------------------------------------------------------------ |
+| **In-memory data store**      | No database setup required; data resets on restart. Clearly documented as per assignment.        |
+| **Soft deletes**              | Records and users are flagged with `deletedAt` instead of being removed, preserving audit trail. |
+| **JWT for auth**              | Stateless, simple to implement, includes role in payload for fast RBAC checks.                   |
+| **Token blacklist in-memory** | Resets on restart; suitable for assessment scope. Production would use Redis.                    |
+| **Joi for validation**        | Declarative, composable schemas with excellent error messages.                                   |
+| **Layered architecture**      | Routes → Services → Data Store keeps concerns separated and code testable.                       |
+| **Role in JWT payload**       | Avoids an extra DB lookup on every request; role changes require re-login.                       |
+| **All users can register**    | In production, admin-only user creation would be more appropriate.                               |
+| **No file upload**            | Financial records are text-based entries only.                                                   |
 
 ---
 
